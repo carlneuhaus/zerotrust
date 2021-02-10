@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  transmission-tunnel:
+    image: cloudflare/cloudflared
+    user: root
+    container_name: transmission-tunnel
+    volumes:
+      - $HOME/.cloudflared:/.cloudflared
+    restart: unless-stopped
+    command: ["tunnel", "--hostname", "downloads.ewqiop.com", "--url", "http://192.168.1.101", "--origincert", "/.cloudflared/cert.pem", "--no-autoupdate"]

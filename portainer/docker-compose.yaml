@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  portainer:
+    image: portainer/portainer-ce
+    container_name: ${PORTAINER_NAME}
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/${PORTAINER_NAME}/data:/data
+  portainer-tunnel:
+    image: cloudflare/cloudflared
+    user: root
+    container_name: portainer-tunnel
+    volumes:
+      - $HOME/.cloudflared:/.cloudflared
+    restart: unless-stopped
+    command: ["tunnel", "--hostname", "portainer.ewqiop.com", "--url", "http://portainer:9000", "--origincert", "/.cloudflared/cert.pem", "--no-autoupdate"]

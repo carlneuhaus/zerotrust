@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  movies-tunnel:
+    image: cloudflare/cloudflared
+    user: root
+    container_name: movies-tunnel
+    volumes:
+      - $HOME/.cloudflared:/.cloudflared
+    restart: unless-stopped
+    command: ["tunnel", "--hostname", "movies.ewqiop.com", "--url", "http://192.168.1.101", "--origincert", "/.cloudflared/cert.pem", "--no-autoupdate"]

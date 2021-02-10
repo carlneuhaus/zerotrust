@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  chef:
+    image: mpepping/cyberchef
+    container_name: ${CHEF_NAME}
+    restart: unless-stopped
+  chef-tunnel:
+    image: cloudflare/cloudflared
+    user: root
+    container_name: chef-tunnel
+    volumes:
+      - $HOME/.cloudflared:/.cloudflared
+    restart: unless-stopped
+    command: ["tunnel", "--hostname", "chef.ewqiop.com", "--url", "http://chef:8000", "--origincert", "/.cloudflared/cert.pem", "--no-autoupdate"]

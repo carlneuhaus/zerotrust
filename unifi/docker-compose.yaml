@@ -1,0 +1,10 @@
+version: "3.7"
+services:
+  unifi-tunnel:
+    image: cloudflare/cloudflared
+    user: root
+    container_name: unifi-tunnel
+    volumes:
+      - $HOME/.cloudflared:/.cloudflared
+    restart: unless-stopped
+    command: ["tunnel", "--hostname", "unifi.ewqiop.com", "--url", "https://192.168.1.10:8443", "--origincert", "/.cloudflared/cert.pem", "--no-tls-verify", "--no-autoupdate"]

@@ -1,0 +1,23 @@
+version: "3.7"
+services:
+  jackett:
+    image: ghcr.io/linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=sydney/australia
+      - AUTO_UPDATE=true #optional
+    volumes:
+      - /opt/jackett:/config
+    ports:
+      - 9117:9117
+    restart: unless-stopped
+  jackett-tunnel:
+    image: cloudflare/cloudflared
+    user: root
+    container_name: jackett-tunnel
+    volumes:
+      - $HOME/.cloudflared:/.cloudflared
+    restart: unless-stopped
+    command: ["tunnel", "--hostname", "jackett.ewqiop.com", "--url", "http://jackett:9117", "--origincert", "/.cloudflared/cert.pem", "--no-autoupdate"]

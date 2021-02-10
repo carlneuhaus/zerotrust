@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  home-assistant:
+    image: homeassistant/home-assistant:stable
+    container_name: home-assistant
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /opt/home-assistant:/config
+    environment:
+      - tz="TZ=Australia/Sydney"
+  home-assistant-tunnel:
+    image: cloudflare/cloudflared
+    user: root
+    container_name: home-assistant-tunnel
+    volumes:
+      - $HOME/.cloudflared:/.cloudflared
+    restart: unless-stopped
+    command: ["tunnel", "--hostname", "ha.ewqiop.com", "--url", "http://home-assistant:8123", "--origincert", "/.cloudflared/cert.pem", "--no-autoupdate"]
