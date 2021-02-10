@@ -2,7 +2,7 @@ version: "3.7"
 services:
   chef:
     image: mpepping/cyberchef
-    container_name: ${CHEF_NAME}
+    container_name: chef
     restart: unless-stopped
   chef-tunnel:
     image: cloudflare/cloudflared
