@@ -1,0 +1,24 @@
+version: "2.1"
+services:
+  plex:
+    image: ghcr.io/linuxserver/plex
+    container_name: plex
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker
+    ports:
+      - "32400:32400"
+    volumes:
+      - /opt/plex:/config
+      - /media/tv:/tv
+      - /media/movies:/movies
+    restart: unless-stopped
+  plex-tunnel:
+    image: cloudflare/cloudflared
+    user: root
+    container_name: plex-tunnel
+    volumes:
+      - $HOME/.cloudflared:/.cloudflared
+    restart: unless-stopped
+    command: ["tunnel", "--hostname", "plex.ewqiop.com", "--url", "http://plex:32400", "--origincert", "/.cloudflared/cert.pem", "--no-autoupdate"]
