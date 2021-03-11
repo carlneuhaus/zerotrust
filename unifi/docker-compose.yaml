@@ -7,4 +7,4 @@ services:
     volumes:
       - $HOME/.cloudflared:/.cloudflared
     restart: unless-stopped
-    command: ["tunnel", "--hostname", "unifi.ewqiop.com", "--url", "https://192.168.1.10:8443", "--origincert", "/.cloudflared/cert.pem", "--no-tls-verify", "--no-autoupdate"]
+    command: ["tunnel", "--hostname", "unifi.ewqiop.com", "--url", "https://192.168.1.10", "--origincert", "/.cloudflared/cert.pem", "--no-tls-verify", "--no-autoupdate"]
