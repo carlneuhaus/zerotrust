@@ -9,6 +9,8 @@ services:
       - /opt/home-assistant:/config
     environment:
       - tz="TZ=Australia/Sydney"
+    ports:
+      - 8123:8123
   home-assistant-tunnel:
     image: cloudflare/cloudflared
     user: root
@@ -17,3 +19,21 @@ services:
       - $HOME/.cloudflared:/.cloudflared
     restart: unless-stopped
     command: ["tunnel", "--hostname", "ha.ewqiop.com", "--url", "http://home-assistant:8123", "--origincert", "/.cloudflared/cert.pem", "--no-autoupdate"]
+  home-assistant-vscode:
+    image: linuxserver/code-server
+    container_name: home-assistant-vscode
+    volumes:
+      - /opt/vscode:/config
+      - /opt/home-assistant:/config/workspace
+    environment:
+      - DOCKER_MODS=stecky/mods:code-server-home-assistant
+      - HOMEASSISTANT_URL=http://home-assistant:8123
+  home-assistant-vscode-tunnel:
+    image: cloudflare/cloudflared
+    user: root
+    container_name: home-assistant-vscode-tunnel
+    volumes:
+      - $HOME/.cloudflared:/.cloudflared
+    restart: unless-stopped
+    command: ["tunnel", "--hostname", "havs.ewqiop.com", "--url", "http://home-assistant-vscode:8443", "--origincert", "/.cloudflared/cert.pem", "--no-autoupdate"]
+          
